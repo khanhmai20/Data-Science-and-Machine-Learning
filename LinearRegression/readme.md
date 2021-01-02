@@ -25,5 +25,3 @@ The application of gradient descent is to minimizing the cost which initialized 
 
 ### References
 [Certified by Machine Learning Stand Ford University](http://cs229.stanford.edu)
-
-change something
