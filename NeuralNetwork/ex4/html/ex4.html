@@ -1,0 +1,254 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ex4</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-24"><meta name="DC.source" content="ex4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear
+dir
+load(<span class="string">'ex4data1.mat'</span>);
+m = size(X, 1);
+
+<span class="comment">% Randomly select 100 data points to display</span>
+sel = randperm(size(X, 1));
+sel = sel(1:100);
+displayData(X(sel, :));
+<span class="comment">% Load the weights into variables Theta1 and Theta2</span>
+load(<span class="string">'ex4weights.mat'</span>);
+input_layer_size  = 400;  <span class="comment">% 20x20 Input Images of Digits</span>
+hidden_layer_size = 25;   <span class="comment">% 25 hidden units</span>
+num_labels = 10;          <span class="comment">% 10 labels, from 1 to 10 (note that we have mapped "0" to label 10)</span>
+
+<span class="comment">% Unroll parameters</span>
+nn_params = [Theta1(:) ; Theta2(:)];
+
+<span class="comment">% Weight regularization parameter (we set this to 0 here).</span>
+lambda = 0;
+
+J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+
+fprintf(<span class="string">'Cost at parameters (loaded from ex4weights): %f'</span>, J);
+<span class="comment">% Weight regularization parameter (we set this to 1 here).</span>
+lambda = 1;
+
+J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+fprintf(<span class="string">'Cost at parameters (loaded from ex4weights): %f'</span>, J);
+<span class="comment">% Call your sigmoidGradient function</span>
+sigmoidGradient(0)
+initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
+initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
+
+<span class="comment">% Unroll parameters</span>
+initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
+checkNNGradients;
+<span class="comment">%  Check gradients by running checkNNGradients</span>
+lambda = 3;
+checkNNGradients(lambda);
+<span class="comment">% Also output the costFunction debugging value</span>
+<span class="comment">% This value should be about 0.576051</span>
+debug_J  = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+fprintf(<span class="string">'Cost at (fixed) debugging parameters (w/ lambda = 3): %f'</span>, debug_J);
+options = optimset(<span class="string">'MaxIter'</span>, 50);
+lambda = 1;
+
+<span class="comment">% Create "short hand" for the cost function to be minimized</span>
+costFunction = @(p) nnCostFunction(p, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+
+<span class="comment">% Now, costFunction is a function that takes in only one argument (the</span>
+<span class="comment">% neural network parameters)</span>
+[nn_params, ~] = fmincg(costFunction, initial_nn_params, options);
+<span class="comment">% Obtain Theta1 and Theta2 back from nn_params</span>
+Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), hidden_layer_size, (input_layer_size + 1));
+Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), num_labels, (hidden_layer_size + 1));
+
+pred = predict(Theta1, Theta2, X);
+fprintf(<span class="string">'\nTraining Set Accuracy: %f\n'</span>, mean(double(pred == y)) * 100);
+<span class="comment">% Visualize Weights</span>
+displayData(Theta1(:, 2:end));
+<span class="comment">% Change lambda and MaxIter to see how it affects the result</span>
+lambda = 3;
+MaxIter = 50;
+
+options = optimset(<span class="string">'MaxIter'</span>, MaxIter);
+
+<span class="comment">% Create "short hand" for the cost function to be minimized</span>
+costFunction = @(p) nnCostFunction(p,input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+
+<span class="comment">% Now, costFunction is a function that takes in only one argument (the neural network parameters)</span>
+[nn_params, ~] = fmincg(costFunction, initial_nn_params, options);
+
+<span class="comment">% Obtain Theta1 and Theta2 back from nn_params</span>
+Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), hidden_layer_size, (input_layer_size + 1));
+Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), num_labels, (hidden_layer_size + 1));
+
+pred = predict(Theta1, Theta2, X);
+fprintf(<span class="string">'\nTraining Set Accuracy: %f\n'</span>, mean(double(pred == y)) * 100);
+
+<span class="comment">% Visualize Weights</span>
+displayData(Theta1(:, 2:end));
+</pre><pre class="codeoutput">
+.                           html                        
+..                          lib                         
+.ex4data1.mat.icloud        nnCostFunction.m            
+checkNNGradients.m          predict.m                   
+computeNumericalGradient.m  randInitializeWeights.m     
+debugInitializeWeights.m    sigmoid.m                   
+displayData.m               sigmoidGradient.m           
+ex4.mlx                     submit.m                    
+ex4_companion.mlx           token.mat                   
+ex4weights.mat              
+fmincg.m                    
+
+</pre><pre class="codeoutput error">Error using load
+Unable to read file 'ex4data1.mat'. No such file or directory.
+
+Error in ex4 (line 3)
+load('ex4data1.mat');
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear
+dir
+load('ex4data1.mat');
+m = size(X, 1);
+
+% Randomly select 100 data points to display
+sel = randperm(size(X, 1));
+sel = sel(1:100);
+displayData(X(sel, :));
+% Load the weights into variables Theta1 and Theta2
+load('ex4weights.mat');
+input_layer_size  = 400;  % 20x20 Input Images of Digits
+hidden_layer_size = 25;   % 25 hidden units
+num_labels = 10;          % 10 labels, from 1 to 10 (note that we have mapped "0" to label 10)
+
+% Unroll parameters 
+nn_params = [Theta1(:) ; Theta2(:)];
+
+% Weight regularization parameter (we set this to 0 here).
+lambda = 0;
+
+J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+
+fprintf('Cost at parameters (loaded from ex4weights): %f', J);
+% Weight regularization parameter (we set this to 1 here).
+lambda = 1;
+
+J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+fprintf('Cost at parameters (loaded from ex4weights): %f', J);
+% Call your sigmoidGradient function
+sigmoidGradient(0)
+initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
+initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
+
+% Unroll parameters
+initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
+checkNNGradients;
+%  Check gradients by running checkNNGradients
+lambda = 3;
+checkNNGradients(lambda);
+% Also output the costFunction debugging value 
+% This value should be about 0.576051
+debug_J  = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+fprintf('Cost at (fixed) debugging parameters (w/ lambda = 3): %f', debug_J);
+options = optimset('MaxIter', 50);
+lambda = 1;
+
+% Create "short hand" for the cost function to be minimized
+costFunction = @(p) nnCostFunction(p, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+
+% Now, costFunction is a function that takes in only one argument (the
+% neural network parameters)
+[nn_params, ~] = fmincg(costFunction, initial_nn_params, options);
+% Obtain Theta1 and Theta2 back from nn_params
+Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), hidden_layer_size, (input_layer_size + 1));
+Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), num_labels, (hidden_layer_size + 1));
+ 
+pred = predict(Theta1, Theta2, X);
+fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y)) * 100);
+% Visualize Weights 
+displayData(Theta1(:, 2:end));
+% Change lambda and MaxIter to see how it affects the result
+lambda = 3;
+MaxIter = 50;
+
+options = optimset('MaxIter', MaxIter);
+
+% Create "short hand" for the cost function to be minimized
+costFunction = @(p) nnCostFunction(p,input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+
+% Now, costFunction is a function that takes in only one argument (the neural network parameters)
+[nn_params, ~] = fmincg(costFunction, initial_nn_params, options);
+
+% Obtain Theta1 and Theta2 back from nn_params
+Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), hidden_layer_size, (input_layer_size + 1));
+Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), num_labels, (hidden_layer_size + 1));
+ 
+pred = predict(Theta1, Theta2, X);
+fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y)) * 100);
+
+% Visualize Weights 
+displayData(Theta1(:, 2:end));
+##### SOURCE END #####
+--></body></html>
